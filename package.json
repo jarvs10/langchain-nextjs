@@ -1,6 +1,6 @@
 {
   "name": "langchat",
-  "description": "A sandbox for showcasing different use cases of LangChain's createAgent",
+  "description": "A getting started guide for building LangChain agents with Next.js",
   "author": "Christian Bromann <mail@bromann.dev>",
   "license": "MIT",
   "repository": {

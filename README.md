@@ -1,36 +1,190 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LangChain Agent Getting Started Guide for Next.js
+
+This is a **getting started guide** for building LangChain agents with Next.js. This project demonstrates how to integrate LangChain's `createAgent` API into a Next.js application with a modern chat interface, streaming support, and tool calling capabilities.
+
+## What This Project Demonstrates
+
+This project serves as a learning resource and starting point for developers who want to:
+
+- **Build LangChain agents** using the `createAgent` API
+- **Integrate agents into Next.js** applications with API routes
+- **Implement streaming** chat interfaces with React
+- **Handle tool calls** and display them in the UI
+- **Create a production-ready** chat interface with error handling
+
+## Features
+
+- 🚀 **Next.js 16** with App Router
+- 🤖 **LangChain Agent** integration with `createAgent`
+- 💬 **Streaming chat interface** using `@langchain/langgraph-sdk/react`
+- 🛠️ **Tool calling** with visual tool call bubbles
+- 🎨 **Modern UI** with dark mode support
+- ⚡ **Real-time updates** with server-sent events
+
+## Project Structure
+
+```
+app/
+├── api/
+│   └── basic/
+│       ├── agent.ts      # LangChain agent implementation
+│       └── route.ts      # Next.js API route handler
+├── components/
+│   ├── ChatInterface.tsx # Main chat UI component
+│   ├── ChatInput.tsx     # Message input component
+│   ├── ToolCall.tsx      # Tool call display component
+│   └── ...
+└── page.tsx              # Home page with API key input
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- pnpm (or npm/yarn)
+- Anthropic API key (for Claude models)
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd langchain-nextjs
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+pnpm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. (Optional) Set your API key as an environment variable:
+```bash
+export NEXT_PUBLIC_ANTHROPIC_API_KEY=your_api_key_here
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run the development server:
+```bash
+pnpm dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+If you haven't set the `NEXT_PUBLIC_ANTHROPIC_API_KEY` environment variable, you'll be prompted to enter your API key when you first open the application.
+
+## How It Works
+
+### 1. Agent Implementation (`app/api/basic/agent.ts`)
+
+The agent is created using LangChain's `createAgent` function:
+
+```typescript
+const agent = createAgent({
+  model: new ChatAnthropic({ ... }),
+  tools: [getCustomerInformationTool],
+  checkpointer: new MemorySaver(),
+  systemPrompt: "You are a helpful assistant...",
+});
+```
+
+### 2. API Route (`app/api/basic/route.ts`)
+
+The Next.js API route handles incoming requests and streams the agent's response:
+
+```typescript
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  return basicAgent(body);
+}
+```
+
+### 3. Frontend Integration (`app/components/ChatInterface.tsx`)
+
+The React component uses `useStream` hook from `@langchain/langgraph-sdk/react` to handle streaming:
+
+```typescript
+const stream = useStream({
+  transport: new FetchStreamTransport({
+    apiUrl: "/api/basic",
+    // ...
+  }),
+});
+```
+
+## Key Concepts
+
+### Streaming
+
+The agent streams responses using server-sent events (SSE), allowing for real-time updates in the UI as the agent generates responses.
+
+### Tool Calling
+
+The agent can call tools (like `get_customer_information` in the example). Tool calls are displayed in the UI with their inputs and outputs.
+
+### State Management
+
+The agent uses a `MemorySaver` checkpointer to maintain conversation state across multiple turns.
+
+## Customization
+
+### Adding New Tools
+
+Edit `app/api/basic/agent.ts` to add new tools:
+
+```typescript
+const myNewTool = tool(
+  async (input: { param: string }) => {
+    // Your tool logic here
+    return result;
+  },
+  {
+    name: "my_tool",
+    description: "What your tool does",
+    schema: z.object({
+      param: z.string(),
+    }),
+  }
+);
+
+const agent = createAgent({
+  // ...
+  tools: [getCustomerInformationTool, myNewTool],
+});
+```
+
+### Changing the Model
+
+Modify the model configuration in `app/api/basic/agent.ts`:
+
+```typescript
+const model = new ChatAnthropic({
+  model: "claude-3-7-sonnet-latest", // Change this
+  apiKey: options.apiKey,
+});
+```
+
+### Customizing the System Prompt
+
+Update the `systemPrompt` in the `createAgent` configuration:
+
+```typescript
+const agent = createAgent({
+  // ...
+  systemPrompt: "Your custom system prompt here",
+});
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [LangChain Documentation](https://js.langchain.com/)
+- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [LangChain Agent Guide](https://js.langchain.com/docs/modules/agents/)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This is a learning project. Feel free to fork it, experiment, and adapt it to your needs!
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

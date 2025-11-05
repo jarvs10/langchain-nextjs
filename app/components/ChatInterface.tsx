@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { type Message } from "@langchain/langgraph-sdk";
 import { useStream, FetchStreamTransport } from "@langchain/langgraph-sdk/react";
 import { AIMessage, ToolCall, ToolMessage } from "@langchain/core/messages";
 
@@ -8,60 +9,13 @@ import { WelcomeScreen } from "./Welcome";
 import { ToolCallBubble, type ToolCallState } from "./ToolCall";
 import { ErrorBubble } from "./ErrorBubble";
 import { ChatInput } from "./ChatInput";
+import { isAIMessage, isToolMessage, isHumanMessage, extractTextContent } from "../utils";
 
 interface ChatInterfaceProps {
   apiKey: string;
 }
 
-function isAIMessage(message: unknown): boolean {
-  if (!message || typeof message !== "object") return false;
-  const msg = message as Record<string, unknown>;
-  if (msg.type === "ai") return true;
-  return AIMessage.isInstance(message);
-}
-
-function isToolMessage(message: unknown): boolean {
-  if (!message || typeof message !== "object") return false;
-  const msg = message as Record<string, unknown>;
-  return msg.type === "tool";
-}
-
-function isHumanMessage(message: unknown): boolean {
-  if (!message || typeof message !== "object") return false;
-  const msg = message as Record<string, unknown>;
-  return msg.type === "human";
-}
-
-// Helper function to extract text content from message
-// Handles both string content and structured content arrays
-function extractTextContent(content: unknown): string {
-  if (typeof content === "string") {
-    return content;
-  }
-
-  if (Array.isArray(content)) {
-    return content
-      .map((item) => {
-        if (typeof item === "string") {
-          return item;
-        }
-        if (item && typeof item === "object" && "text" in item) {
-          return String(item.text);
-        }
-        return "";
-      })
-      .join("");
-  }
-
-  if (content && typeof content === "object" && "text" in content) {
-    return String(content.text);
-  }
-
-  return String(content || "");
-}
-
 export default function ChatInterface({ apiKey }: ChatInterfaceProps) {
-
   // Create transport with API key - using closure to capture ref
   // Refs are only accessed in async callbacks (onRequest), not during render
   const transport = useMemo(() => {
@@ -76,11 +30,6 @@ export default function ChatInterface({ apiKey }: ChatInterfaceProps) {
 
         return {
           ...init,
-          method: "POST",
-          headers: {
-            ...(init.headers as Record<string, string>),
-            "Content-Type": "application/json",
-          },
           body: customBody,
         };
       },
@@ -91,36 +40,36 @@ export default function ChatInterface({ apiKey }: ChatInterfaceProps) {
     transport,
   });
 
-
   // Extract tool calls from messages
   // Use a Map keyed by message reference to avoid ID mismatches
   const toolCallsByMessage = useMemo(() => {
-    const map = new Map<unknown, ToolCallState[]>();
+    const map = new Map<Message, ToolCallState[]>();
 
-    stream.messages.forEach((message, messageIndex) => {
+    stream.messages.forEach((message) => {
       // Only process AI messages (check both SDK format and LangChain Core format)
-      if (!isAIMessage(message)) return;
+      if (!isAIMessage(message)) {
+        return
+      };
 
-      const messageAny = message as AIMessage;
-      const messageId = (messageAny.id as string) || `msg-${messageIndex}`;
+      const aiMessage = message as AIMessage;
 
       // Extract tool calls from AIMessage - check both direct property and kwargs
       let toolCalls: ToolCall[] = [];
 
       // Check for tool_calls directly on message (SDK format)
-      if (messageAny.tool_calls && Array.isArray(messageAny.tool_calls)) {
-        toolCalls = messageAny.tool_calls;
+      if (aiMessage.tool_calls && Array.isArray(aiMessage.tool_calls)) {
+        toolCalls = aiMessage.tool_calls;
       }
 
       // Extract tool messages (responses) - find ToolMessage type messages
-      const toolMessages: Record<string, unknown>[] = [];
+      const toolMessages: ToolMessage[] = [];
       for (const msg of stream.messages) {
         if (isToolMessage(msg)) {
-          const msgAny = msg as ToolMessage;
-          const toolCallId = msgAny.tool_call_id;
+          const toolMessage = msg as ToolMessage;
+          const toolCallId = toolMessage.tool_call_id;
 
           if (toolCallId && toolCalls.some((tc) => tc.id === toolCallId)) {
-            toolMessages.push(msg);
+            toolMessages.push(msg as ToolMessage);
           }
         }
       }
@@ -130,27 +79,17 @@ export default function ChatInterface({ apiKey }: ChatInterfaceProps) {
         const toolCallStates: ToolCallState[] = [];
         for (const toolCall of toolCalls) {
           const toolMessage = toolMessages.find((tm) => {
-            const tmAny = tm as Record<string, unknown>;
-            const tmToolCallId =
-              (tmAny.tool_call_id as string | undefined);
-            return tmToolCallId === toolCall.id;
+            return tm.tool_call_id === toolCall.id;
           });
 
           toolCallStates.push({
             toolCall,
             toolMessage,
-            aiMessageId: messageId,
-            timestamp: messageIndex * 1000, // Use message index as timestamp for deterministic ordering
           });
         }
         map.set(message, toolCallStates);
       }
     });
-
-    // Sort by timestamp
-    for (const [, calls] of map.entries()) {
-      calls.sort((a, b) => a.timestamp - b.timestamp);
-    }
 
     return map;
   }, [stream.messages]);

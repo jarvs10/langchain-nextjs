@@ -41,34 +41,38 @@ app/
 
 ### Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - pnpm (or npm/yarn)
 - Anthropic API key (for Claude models)
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd langchain-nextjs
 ```
 
-2. Install dependencies:
+1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
-3. (Optional) Set your API key as an environment variable:
+1. (Optional) Set your API key as an environment variable:
+
 ```bash
 export NEXT_PUBLIC_ANTHROPIC_API_KEY=your_api_key_here
 ```
 
-4. Run the development server:
+1. Run the development server:
+
 ```bash
 pnpm dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+1. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 If you haven't set the `NEXT_PUBLIC_ANTHROPIC_API_KEY` environment variable, you'll be prompted to enter your API key when you first open the application.
 

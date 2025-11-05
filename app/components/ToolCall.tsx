@@ -1,42 +1,104 @@
-import type { ToolCall } from "@langchain/core/messages";
-import type { ToolMessageData } from "@/app/types";
+import type { ToolCall, ToolMessage } from "@langchain/core/messages";
 
+import { extractTextContent } from "../utils";
+
+/**
+ * Represents the state of a tool call in the chat interface.
+ *
+ * This interface encapsulates all information needed to display a tool call bubble,
+ * including the original tool call, its result (if available), and metadata about
+ * its execution state.
+ *
+ * @interface ToolCallState
+ */
 export interface ToolCallState {
+  /**
+   * The tool call object containing the tool name and arguments.
+   * This is the request made by the AI agent to execute a tool.
+   */
   toolCall: ToolCall;
-  toolMessage?: ToolMessageData | Record<string, unknown>;
-  aiMessageId?: string; // The AI message that triggered this tool call
-  timestamp: number; // When the tool call was created
-  errored?: boolean; // Whether this tool call failed due to an error
+
+  /**
+   * The tool message containing the result of the tool execution.
+   * This is undefined while the tool is still executing.
+   */
+  toolMessage?: ToolMessage;
+
+  /**
+   * Whether this tool call failed due to an error.
+   * When true, the component will display error styling.
+   */
+  errored?: boolean;
 }
 
+/**
+ * Props for the ToolCallBubble component.
+ *
+ * @interface ToolCallBubbleProps
+ */
 export interface ToolCallBubbleProps {
+  /**
+   * The complete state of the tool call to display.
+   * Contains the tool call request, result (if available), and execution metadata.
+   */
   toolCallState: ToolCallState;
 }
 
+/**
+ * A component that displays a tool call execution in the chat interface.
+ *
+ * This component renders a visual representation of a tool call made by an AI agent,
+ * showing both the request (tool name and arguments) and the response (result or error).
+ *
+ * Features:
+ * - Displays tool call name and formatted JSON arguments
+ * - Shows tool execution result when available
+ * - Visual error states with red styling
+ * - Loading states ("Waiting for result...")
+ * - Success/error status badges
+ * - Dark mode support
+ * - Responsive layout (max 80% width)
+ *
+ * The component handles three states:
+ * 1. **Pending**: Tool call has been made but no result yet (shows "Waiting for result...")
+ * 2. **Success**: Tool execution completed successfully (shows result with green badge)
+ * 3. **Error**: Tool execution failed (shows error styling and message)
+ *
+ * Error detection:
+ * - Checks `toolCallState.errored` flag
+ * - Checks `toolMessage.status === "error"`
+ * - Displays appropriate error messaging and styling
+ *
+ * @example
+ * ```tsx
+ * const toolCallState: ToolCallState = {
+ *   toolCall: {
+ *     name: "get_weather",
+ *     args: { location: "San Francisco" },
+ *     id: "call_123"
+ *   },
+ *   toolMessage: {
+ *     content: "72°F and sunny",
+ *     status: "success"
+ *   },
+ * };
+ *
+ * <ToolCallBubble toolCallState={toolCallState} />
+ * ```
+ *
+ * @param props - The component props
+ * @returns A visual bubble component displaying tool call information
+ */
 export function ToolCallBubble({ toolCallState }: ToolCallBubbleProps) {
-  // Helper to extract status and content from both formats
-  const getToolMessageInfo = (toolMessage: ToolMessageData | Record<string, unknown>) => {
-    const msgAny = toolMessage as Record<string, unknown>;
-    // Handle LangGraph native format (status/content directly)
-    if ('status' in msgAny && 'content' in msgAny) {
-      return {
-        status: msgAny.status as "success" | "error",
-        content: msgAny.content as string
-      };
-    }
-    // Handle ToolMessageData format (status/content under kwargs)
-    if (msgAny.kwargs && typeof msgAny.kwargs === "object") {
-      const kwargs = msgAny.kwargs as Record<string, unknown>;
-      return {
-        status: kwargs.status as "success" | "error" | undefined,
-        content: kwargs.content as string | undefined
-      };
-    }
-    return { status: undefined, content: undefined };
-  };
+  const toolMessageInfo = toolCallState.toolMessage;
 
-  const toolMessageInfo = toolCallState.toolMessage ? getToolMessageInfo(toolCallState.toolMessage) : null;
+  // Determine if this tool call errored by checking both the errored flag
+  // and the tool message status
   const isErrored = toolCallState.errored || (toolMessageInfo && toolMessageInfo.status === "error");
+
+  // Dynamic styling based on error state
+  // Error state: red borders and light red background
+  // Normal state: gray borders and white/dark gray background
   const borderColor = isErrored
     ? "border-red-400 dark:border-red-500"
     : "border-gray-300 dark:border-gray-700";
@@ -87,7 +149,7 @@ export function ToolCallBubble({ toolCallState }: ToolCallBubbleProps) {
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 rounded p-3">
                 <pre className="text-xs text-gray-700 dark:text-gray-300 overflow-x-auto whitespace-pre-wrap">
-                  {toolMessageInfo.content || ""}
+                  {extractTextContent(toolMessageInfo.content)}
                 </pre>
               </div>
             </div>

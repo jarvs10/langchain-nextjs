@@ -3,7 +3,7 @@ import { createAgent, tool, type BaseMessage } from "langchain";
 import { MemorySaver } from "@langchain/langgraph";
 import type { LangGraphRunnableConfig } from "@langchain/langgraph";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { customers } from "@/data/info";
+import { customers, orders } from "@/data/info";
 
 const checkpointer = new MemorySaver();
 
@@ -15,7 +15,7 @@ export async function basicAgent(options: {
   apiKey: string;
   config: LangGraphRunnableConfig;
 }) {
-  // Create the Anthropic model instance with user-provided API key
+  // Create the gemini model instance with user-provided API key
   const model = new ChatGoogleGenerativeAI({
     model: "gemini-3-flash-preview",
     apiKey: options.apiKey,
@@ -34,12 +34,27 @@ export async function basicAgent(options: {
     }
   );
 
+  const getCustomerAndOrdersTool = tool(
+    async (input: { customerId: string }) => {
+      const customer = customers[input.customerId as keyof typeof customers];
+      const customerOrders = orders.filter((order) => order.customerId === input.customerId);
+      return { customer, orders: customerOrders };
+    },
+    {
+      name: "get_customer_and_orders",
+      description: "Get information about a customer and their associated orders",
+      schema: z.object({
+        customerId: z.string(),
+      }),
+    }
+  );
+
   const agent = createAgent({
     model,
-    tools: [getCustomerInformationTool],
+    tools: [getCustomerInformationTool, getCustomerAndOrdersTool],
     checkpointer,
     systemPrompt:
-      "You are a helpful assistant that can get information about customers.",
+      "You are a helpful assistant that can get information about customers and their orders. Use the get_customer_and_orders tool if you need to get both customer information and their orders in a single call.",
   });
 
   const stream = await agent.stream(

@@ -35,6 +35,8 @@ export default function CustomerTable() {
               <th className="px-6 py-4 font-semibold">Email</th>
               <th className="px-6 py-4 font-semibold">Phone</th>
               <th className="px-6 py-4 font-semibold">Country</th>
+              <th className="px-6 py-4 font-semibold">Occupation</th>
+              <th className="px-6 py-4 font-semibold">Details</th>
               <th className="px-6 py-4 font-semibold">Address</th>
             </tr>
           </thead>
@@ -62,6 +64,12 @@ export default function CustomerTable() {
                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200">
                     {customer.country}
                   </span>
+                </td>
+                <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
+                  {customer.occupation}
+                </td>
+                <td className="px-6 py-4 text-gray-500 dark:text-gray-400 max-w-xs truncate">
+                  {customer.details}
                 </td>
                 <td className="px-6 py-4 text-gray-500 dark:text-gray-400 truncate max-w-xs">
                   {customer.address}

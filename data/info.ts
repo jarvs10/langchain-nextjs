@@ -5,6 +5,8 @@ export const customers = {
     phone: "+34 912 345 678",
     country: "Spain",
     address: "Calle de Alcalá, 123, Madrid",
+    occupation: "Software Architect",
+    details: "Expert in distributed systems and cloud infrastructure.",
   },
   "1002": {
     name: "Elena Martinez",
@@ -12,6 +14,8 @@ export const customers = {
     phone: "+34 931 234 567",
     country: "Spain",
     address: "Carrer de Balmes, 45, Barcelona",
+    occupation: "Graphic Designer",
+    details: "Specializes in minimalist branding and UI/UX design.",
   },
   "1003": {
     name: "John Smith",
@@ -19,6 +23,8 @@ export const customers = {
     phone: "+1 212 555 0198",
     country: "USA",
     address: "5th Ave, 101, New York, NY",
+    occupation: "Investment Banker",
+    details: "High-value portfolio manager with a focus on tech startups.",
   },
   "1004": {
     name: "Sarah Jenkins",
@@ -26,6 +32,8 @@ export const customers = {
     phone: "+44 20 7946 0958",
     country: "UK",
     address: "Baker Street, 221B, London",
+    occupation: "Data Scientist",
+    details: "Lead researcher in machine learning and natural language processing.",
   },
   "1005": {
     name: "Hans Mueller",
@@ -33,6 +41,8 @@ export const customers = {
     phone: "+49 30 123456",
     country: "Germany",
     address: "Friedrichstraße, 10, Berlin",
+    occupation: "Mechanical Engineer",
+    details: "Specialist in renewable energy systems and smart grid technology.",
   },
   "1006": {
     name: "Marie Dubois",
@@ -40,6 +50,8 @@ export const customers = {
     phone: "+33 1 42 68 53 00",
     country: "France",
     address: "Rue de la Paix, 5, Paris",
+    occupation: "Fashion Consultant",
+    details: "Advisor for luxury brands with deep roots in Parisian haute couture.",
   },
   "1007": {
     name: "Yuki Tanaka",
@@ -47,6 +59,8 @@ export const customers = {
     phone: "+81 3 3448 2111",
     country: "Japan",
     address: "Ginza, 4-chome, Chuo City, Tokyo",
+    occupation: "Robotics Engineer",
+    details: "Pioneer in humanoid robotics and industrial automation.",
   },
   "1008": {
     name: "Luigi Verdi",
@@ -54,6 +68,8 @@ export const customers = {
     phone: "+39 06 697701",
     country: "Italy",
     address: "Via del Corso, 20, Rome",
+    occupation: "Restaurateur",
+    details: "Owner of several Michelin-starred restaurants across Europe.",
   },
   "1009": {
     name: "Ana Silva",
@@ -61,6 +77,8 @@ export const customers = {
     phone: "+55 11 3224 1000",
     country: "Brazil",
     address: "Avenida Paulista, 1500, São Paulo",
+    occupation: "Environmental Lawyer",
+    details: "Advocate for Amazon rainforest protection and sustainable policy.",
   },
   "1010": {
     name: "Dmitry Ivanov",
@@ -68,6 +86,8 @@ export const customers = {
     phone: "+7 495 730 73 00",
     country: "Russia",
     address: "Tverskaya St, 7, Moscow",
+    occupation: "Cybersecurity Analyst",
+    details: "Expert in threat intelligence and blockchain security protocols.",
   },
   "1011": {
     name: "Sofia Gonzalez",
@@ -75,6 +95,8 @@ export const customers = {
     phone: "+52 55 5130 5300",
     country: "Mexico",
     address: "Paseo de la Reforma, 50, CDMX",
+    occupation: "Creative Director",
+    details: "Award-winning filmmaker and multimedia storyteller.",
   },
   "1012": {
     name: "David Chen",
@@ -82,6 +104,8 @@ export const customers = {
     phone: "+86 10 6512 2288",
     country: "China",
     address: "Nanjing Rd, 200, Shanghai",
+    occupation: "E-commerce Specialist",
+    details: "Growth hacker who scaled multiple cross-border logistics firms.",
   },
   "1013": {
     name: "Fatima Al-Sayed",
@@ -89,6 +113,8 @@ export const customers = {
     phone: "+974 4433 2211",
     country: "Qatar",
     address: "Corniche St, West Bay, Doha",
+    occupation: "Petroleum Engineer",
+    details: "Senior strategist for energy transition and carbon capture.",
   },
   "1014": {
     name: "Liam O'Connor",
@@ -96,6 +122,8 @@ export const customers = {
     phone: "+353 1 671 2222",
     country: "Ireland",
     address: "Grafton St, 15, Dublin",
+    occupation: "Fintech Entrepreneur",
+    details: "Founder of a disruptive digital banking platform in the EU.",
   },
   "1015": {
     name: "Aarav Sharma",
@@ -103,6 +131,8 @@ export const customers = {
     phone: "+91 22 6665 8282",
     country: "India",
     address: "Marine Drive, 120, Mumbai",
+    occupation: "Full-stack Developer",
+    details: "Top contributor to several major open-source AI frameworks.",
   },
   "1016": {
     name: "Isabella Rossi",
@@ -110,6 +140,8 @@ export const customers = {
     phone: "+39 02 45451",
     country: "Italy",
     address: "Via Montenapoleone, 12, Milan",
+    occupation: "Product Manager",
+    details: "Specializes in high-end consumer electronics and wearable tech.",
   },
   "1017": {
     name: "Noah Wilson",
@@ -117,6 +149,8 @@ export const customers = {
     phone: "+1 416 978 2011",
     country: "Canada",
     address: "Bay St, 200, Toronto, ON",
+    occupation: "Renewable Energy Consultant",
+    details: "Advisor for large-scale wind and solar projects in North America.",
   },
   "1018": {
     name: "Sophie Van den Berg",
@@ -124,6 +158,8 @@ export const customers = {
     phone: "+31 20 624 1111",
     country: "Netherlands",
     address: "Damrak, 30, Amsterdam",
+    occupation: "Urban Planner",
+    details: "Expert in sustainable city design and circular economy models.",
   },
   "1019": {
     name: "Lars Erikson",
@@ -131,6 +167,8 @@ export const customers = {
     phone: "+47 22 86 30 00",
     country: "Norway",
     address: "Karl Johans gate, 10, Oslo",
+    occupation: "Marine Biologist",
+    details: "Lead researcher on Arctic ecosystem preservation.",
   },
   "1020": {
     name: "Emma Smith",
@@ -138,5 +176,34 @@ export const customers = {
     phone: "+61 2 9223 3311",
     country: "Australia",
     address: "George St, 300, Sydney, NSW",
+    occupation: "Marketing Strategist",
+    details: "Specializes in digital expansion for Australian retail chains.",
   },
 };
+
+export const orders = [
+  { orderId: "ORD-001", customerId: "1001", product: "MacBook Pro", status: "Delivered", date: "2026-06-10" },
+  { orderId: "ORD-002", customerId: "1001", product: "Magic Mouse", status: "Shipped", date: "2026-06-15" },
+  { orderId: "ORD-003", customerId: "1002", product: "iPad Air", status: "Processing", date: "2026-06-18" },
+  { orderId: "ORD-004", customerId: "1003", product: "AirPods Pro", status: "Delivered", date: "2026-06-12" },
+  { orderId: "ORD-005", customerId: "1004", product: "Herman Miller Chair", status: "Shipped", date: "2026-06-16" },
+  { orderId: "ORD-006", customerId: "1005", product: "Mechanical Keyboard", status: "Delivered", date: "2026-06-05" },
+  { orderId: "ORD-007", customerId: "1005", product: "Desk Mat", status: "Delivered", date: "2026-06-05" },
+  { orderId: "ORD-008", customerId: "1006", product: "Sony A7 IV Camera", status: "Processing", date: "2026-06-18" },
+  { orderId: "ORD-009", customerId: "1007", product: "Raspberry Pi 5", status: "Shipped", date: "2026-06-17" },
+  { orderId: "ORD-010", customerId: "1008", product: "Espresso Machine", status: "Delivered", date: "2026-06-01" },
+  { orderId: "ORD-011", customerId: "1009", product: "Standing Desk", status: "Pending", date: "2026-06-18" },
+  { orderId: "ORD-012", customerId: "1010", product: "YubiKey 5 NFC", status: "Delivered", date: "2026-06-14" },
+  { orderId: "ORD-013", customerId: "1010", product: "Ledger Nano X", status: "Shipped", date: "2026-06-16" },
+  { orderId: "ORD-014", customerId: "1011", product: "Wacom Cintiq", status: "Delivered", date: "2026-06-08" },
+  { orderId: "ORD-015", customerId: "1012", product: "Logitech MX Master 3S", status: "Delivered", date: "2026-06-10" },
+  { orderId: "ORD-016", customerId: "1013", product: "Noise Cancelling Headphones", status: "Processing", date: "2026-06-18" },
+  { orderId: "ORD-017", customerId: "1014", product: "Ultrawide Monitor 34\"", status: "Shipped", date: "2026-06-17" },
+  { orderId: "ORD-018", customerId: "1015", product: "Server Rack Cabinet", status: "Pending", date: "2026-06-18" },
+  { orderId: "ORD-019", customerId: "1016", product: "Smartwatch", status: "Delivered", date: "2026-06-15" },
+  { orderId: "ORD-020", customerId: "1017", product: "Portable Solar Panel", status: "Delivered", date: "2026-06-11" },
+  { orderId: "ORD-021", customerId: "1018", product: "Electric Scooter", status: "Shipped", date: "2026-06-16" },
+  { orderId: "ORD-022", customerId: "1019", product: "Waterproof Drone", status: "Processing", date: "2026-06-18" },
+  { orderId: "ORD-023", customerId: "1020", product: "Podcast Microphone Kit", status: "Delivered", date: "2026-06-09" },
+  { orderId: "ORD-024", customerId: "1020", product: "Ring Light", status: "Delivered", date: "2026-06-09" }
+];
